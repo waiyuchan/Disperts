@@ -5,3 +5,15 @@
 ![](https://img.shields.io/badge/ORM-MyBatis-red.svg)
 ![](https://img.shields.io/badge/license-Apache_2.0-green.svg)
 
+---
+
+### 支持压测引擎
+* Locust
+* JMeter
+
+### 功能列表
+|功能|实现情况|
+|---|---|
+|任务管理|开发中 ⏰|
+|节点管理|未实现 ❌|
+|触发器管理|未实现 ❌|
