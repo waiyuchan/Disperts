@@ -1,37 +1,40 @@
 package com.dolphinfeed.disperts.controller;
 
+import com.dolphinfeed.disperts.common.api.api.ApiResponse;
+import com.dolphinfeed.disperts.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import com.dolphinfeed.disperts.common.api.api.ErrorCode;
 
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest request) {
-        try {
-            userService.registerUser(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok().build();
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-    }
-
+    //    @Autowired
+//    private UserService userService;
+//
+//    @PostMapping("/register")
+//    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest request) {
+//        try {
+//            userService.registerUser(request.getUsername(), request.getPassword());
+//            return ResponseEntity.ok().build();
+//        } catch (UserAlreadyExistsException e) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//        }
+//    }
+//
     @PostMapping("/login")
-    public ResponseEntity<AuthTokenResponse> loginUser(@RequestBody UserLoginRequest request) {
+    public ApiResponse<?> login(@RequestParam String username, @RequestParam String password, @RequestParam int loginMode) {
         try {
-            String authToken = userService.loginUser(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok(new AuthTokenResponse(authToken));
-        } catch (InvalidCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            String token = authService.login(username, password, loginMode);
+            return ApiResponse.success(token);
+        } catch (RuntimeException e) {
+            return ApiResponse.failure(ErrorCode.USER_NOT_FOUND);
         }
     }
 }
